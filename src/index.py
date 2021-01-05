@@ -5,6 +5,8 @@ from urllib import parse, request
 import re
 from clima import *
 
+DISCORD_TOKEN = ''
+
 bot = commands.Bot(command_prefix='>', description='Bot de Ayuda')
 
 @bot.command()
@@ -39,4 +41,4 @@ async def on_ready():
     await bot.change_presence(activity=discord.Streaming(name='Tutorial', url='http://www.twitch.tv/sokids'))
     print('Bot preparado')
 
-bot.run('Nzk2MDY2MTI4Njk4ODAyMTg2.X_SgWw.OXybykYbxR84oBE2tj7-jTYYagc')
+bot.run(DISCORD_TOKEN)
