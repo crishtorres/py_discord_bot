@@ -1,11 +1,15 @@
+import os
 import discord
 from discord.ext import commands
 import datetime
 from urllib import parse, request
 import re
-from clima import *
+from dotenv import load_dotenv
 
-DISCORD_TOKEN = ''
+load_dotenv()
+
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+GUILD = os.getenv('DISCORD_GUILD')
 
 bot = commands.Bot(command_prefix='>', description='Bot de Ayuda')
 
@@ -36,9 +40,37 @@ async def yt(ctx, *, search):
     await ctx.send('https://www.youtube.com/watch?v='+ s_result[0])
 
 # Eventos
+
+"""
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+
+    if 'feliz cumpleaños' in message.content.lower():
+        await message.channel.send('Feliz cumpleaños! 🎈🎉')
+"""
+
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Streaming(name='Tutorial', url='http://www.twitch.tv/sokids'))
-    print('Bot preparado')
+    #await bot.change_presence(activity=discord.Streaming(name='Tutorial', url='http://www.twitch.tv/sokids'))
+    for guild in bot.guilds:
+        if guild.name == GUILD:
+            break
+    
+    print(
+        f'{bot.user} se ha conectado a Discord!\n'
+        f'Se conecto a {guild.name} (id: {guild.id})'
+    )
+
+    members = '\n - '.join([member.name for member in guild.members])
+    print(f'Miembros del servidor : \n - {members}')
+
+@bot.event
+async def on_member_join(member):
+    await member.create_dm()
+    await member.dm_channel.send(
+        f'Hola {member.name}!, bienvenido a mi servidor!'
+    )
 
 bot.run(DISCORD_TOKEN)
